@@ -15,7 +15,16 @@ while (true) {
     // Write an action using print()
     // To debug: printErr('Debug messages...');
 
+    if (coordX == road){
+    	return 'JUMP';
+    }else{
+	    if (speed < gap){
+	    	return 'SPEED';
+	    }else if (speed > gap){
+	    	return 'SLOW';
+	    }else{
+	    	return 'WAIT';
+	    }
+	}
     
-    // A single line containing one of 4 keywords: SPEED, SLOW, JUMP, WAIT.
-    print('SPEED');
 }

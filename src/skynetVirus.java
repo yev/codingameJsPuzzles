@@ -1,20 +1,23 @@
 import java.util.*;
 
 /**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
+ * Sky net virus solution based on Breadth First Search
+ * See {@link https://www.codingame.com/ide/43744749f2fe544b05a07aee8a7521d45976f5f}
  **/
 class Player {
 
     private static Set<Integer> visited = new HashSet<Integer>();
     private static Set<Integer> gateways = new HashSet<Integer>();
     static int N = 0;
-    static int[][] GM;
-    static String lastCommand = null;
+    /**
+     * Adjacency matrix
+     */
+    private static int[][] ADJENCENCY_MATRIX;
+    private static String lastCommand = null;
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
         N = in.nextInt(); // the total number of nodes in the level, including the gateways
-        GM = new int[N][N];
+        ADJENCENCY_MATRIX = new int[N][N];
 
 
         int L = in.nextInt(); // the number of links
@@ -24,8 +27,8 @@ class Player {
         for (int i = 0; i < L; i++) {
             int N1 = in.nextInt(); // N1 and N2 defines a link between these nodes
             int N2 = in.nextInt();
-            GM[N1][N2] = 1;
-            GM[N2][N1] = 1;
+            ADJENCENCY_MATRIX[N1][N2] = 1;
+            ADJENCENCY_MATRIX[N2][N1] = 1;
         }
 
         for (int i = 0; i < E; i++) {
@@ -51,16 +54,17 @@ class Player {
     }
 
     private static Queue<Integer> getChildren(int x){
-        Queue<Integer> set = new LinkedList<Integer>();
+        Queue<Integer> queue = new LinkedList<Integer>();
         for (int i = 0; i < N; i++) {
-            if (GM[x][i] == 1) {
-                set.add(i);
+            if (ADJENCENCY_MATRIX[x][i] == 1) {
+                queue.add(i);
             }
         }
-        return set;
+        return queue;
     }
 
-    public static String findFirstExit(Map<Integer, Queue<Integer>> level){
+    //using BFS to find the shortest path to the gateway
+    public static void findFirstExit(Map<Integer, Queue<Integer>> level){
         Map<Integer, Queue<Integer>> nextLevel = new HashMap<Integer, Queue<Integer>>();
         for (Integer currentRoot: level.keySet()  ) {
             Queue<Integer> children = level.get(currentRoot);
@@ -69,7 +73,6 @@ class Player {
                 int currentChildNode = children.remove();
                 if (gateways.contains(currentChildNode)){
                     lastCommand = ""+currentRoot+" "+currentChildNode;
-                    return ""+currentRoot+" "+currentChildNode;
                 }
                 nextLevel.put(currentChildNode, getChildren(currentChildNode));
             }
@@ -77,6 +80,6 @@ class Player {
         if (!nextLevel.isEmpty()) {
             findFirstExit(nextLevel);
         }
-        return null;
+        return;
     }
 }
